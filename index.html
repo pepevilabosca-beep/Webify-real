@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webify.es — Tu web. Tu negocio.</title>
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+button { cursor: pointer; font: inherit; }
+input, textarea, select { font: inherit; }
+
+/* ── TOKENS ── */
+:root {
+  --black:   #0A0A0A;
+  --blue:    #2563EB;
+  --blue-dk: #1D4ED8;
+  --blue-a:  rgba(37,99,235,0.10);
+  --white:   #F4F3EF;
+  --gray:    #9CA3AF;
+  --gray-lt: #C8CDD8;
+  --s1:      #111111;
+  --s2:      #191919;
+  --bd:      rgba(255,255,255,0.07);
+  --bd2:     rgba(255,255,255,0.13);
+  --px: clamp(20px, 5vw, 72px);
+  --py: clamp(64px, 10vw, 120px);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(15px, 1.6vw, 17px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── UTILITIES ── */
+.label {
+  font-size: 11px; font-weight: 500; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--blue); display: block;
+  margin-bottom: .75rem;
+}
+.h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(26px, 3.8vw, 46px);
+  font-weight: 800; letter-spacing: -.035em; line-height: 1.12;
+  color: var(--white);
+}
+.h2 .soft { font-weight: 400; color: var(--gray-lt); }
+.lead {
+  font-size: clamp(15px, 1.8vw, 17px);
+  color: var(--gray-lt); line-height: 1.8; max-width: 580px;
+}
+.btn-p {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; background: var(--blue); color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  padding: 14px 28px; border-radius: 10px; border: none;
+  transition: background .2s, transform .15s;
+  white-space: nowrap; text-decoration: none;
+}
+.btn-p:hover { background: var(--blue-dk); transform: translateY(-2px); }
+.btn-o {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; background: transparent; color: var(--gray-lt);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 400;
+  padding: 14px 22px; border-radius: 10px;
+  border: 0.5px solid var(--bd2);
+  transition: border-color .2s, color .2s, transform .15s;
+  white-space: nowrap;
+}
+.btn-o:hover { border-color: rgba(255,255,255,.3); color: var(--white); transform: translateY(-2px); }
+.arr { transition: transform .2s; display: inline-block; }
+.btn-o:hover .arr { transform: translateX(3px); }
+
+/* ── OVERLAY / MODAL ── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.84); z-index: 300;
+  align-items: center; justify-content: center;
+  padding: clamp(12px,4vw,32px);
+  backdrop-filter: blur(10px);
+}
+.overlay.on { display: flex; }
+.modal {
+  background: var(--s1); border: .5px solid var(--bd2); border-radius: 20px;
+  width: 100%; max-width: 740px; max-height: 90vh; overflow-y: auto;
+  padding: clamp(24px,5vw,48px); position: relative;
+  animation: mIn .3s cubic-bezier(.16,1,.3,1);
+}
+@keyframes mIn { from{opacity:0;transform:translateY(20px) scale(.97)} to{opacity:1;transform:none} }
+.m-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--s2); border: .5px solid var(--bd2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray); font-size: 16px; line-height: 1;
+  transition: background .2s, color .2s;
+}
+.m-close:hover { background: var(--bd2); color: var(--white); }
+.m-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(22px, 3.5vw, 36px); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.15; color: var(--white);
+  margin: .75rem 0 1rem;
+}
+.m-body { font-size: 15px; color: var(--gray-lt); line-height: 1.8; margin-bottom: 2rem; }
+
+/* designs modal */
+.dg { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 1.75rem; }
+.dc {
+  background: var(--s2); border: .5px solid var(--bd); border-radius: 12px;
+  overflow: hidden; transition: border-color .2s, transform .2s; cursor: pointer;
+}
+.dc:hover { border-color: var(--blue); transform: translateY(-2px); }
+.dp { height: 140px; padding: 14px; overflow: hidden; }
+.dp.dk { background: #090909; }
+.dp.lt { background: #F7F5F0; }
+.dp.bb { background: #0D1829; }
+.dp.cr { background: #FAF7F2; }
+.dn-nav  { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
+.dn-logo { width:36px; height:6px; border-radius:2px; }
+.dn-btn  { width:44px; height:16px; border-radius:4px; }
+.dn-h    { height:8px; border-radius:2px; margin-bottom:6px; }
+.dn-p    { height:5px; border-radius:2px; }
+.dn-hero { height:46px; border-radius:6px; margin:8px 0; display:flex; align-items:center; padding:0 10px; }
+.dc-info { padding:10px 14px; border-top:.5px solid var(--bd); }
+.dc-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; color:var(--white); }
+.dc-type { font-size:12px; color:var(--gray); margin-top:2px; }
+
+/* steps modal */
+.steps { display:flex; flex-direction:column; }
+.si { display:flex; gap:18px; padding:20px 0; border-bottom:.5px solid var(--bd); }
+.si:last-child { border-bottom:none; }
+.sn {
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:800;
+  color:var(--white); opacity:.1;
+  line-height:1; min-width:46px; padding-top:4px; flex-shrink:0;
+}
+.st { font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; color:var(--white); margin-bottom:4px; letter-spacing:-.01em; }
+.sd { font-size:14px; color:var(--gray-lt); line-height:1.75; }
+
+/* ── FORM ── */
+.form { display:flex; flex-direction:column; gap:10px; }
+.fr   { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.fi {
+  background: var(--s2); border: .5px solid var(--bd2); border-radius: 10px;
+  padding: 13px 15px; color: var(--white); outline: none; width: 100%;
+  transition: border-color .2s; appearance: none; font-size: 15px;
+}
+.fi::placeholder { color: var(--gray); }
+.fi:focus { border-color: rgba(37,99,235,.5); }
+/* FIX: select color cuando está seleccionado */
+.fi.selected, select.fi:not([value=""]) { color: var(--white); }
+.fta { resize: vertical; min-height: 96px; }
+.fsub {
+  background: var(--blue); color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  padding: 14px; border-radius: 10px; border: none; width: 100%;
+  transition: background .2s, transform .15s;
+}
+.fsub:hover { background: var(--blue-dk); transform: translateY(-1px); }
+.fsub:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: 18px var(--px);
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: .5px solid transparent;
+  transition: border-color .3s, background .3s;
+}
+nav.sc { border-color: var(--bd); background: rgba(10,10,10,.93); backdrop-filter: blur(16px); }
+.logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+.logo-mark {
+  width: 30px; height: 30px; background: var(--s2); border: .5px solid var(--bd2);
+  border-radius: 7px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3px; padding: 7px; flex-shrink: 0;
+}
+.logo-mark span { border-radius: 1px; display: block; }
+.logo-mark span:nth-child(1) { background: var(--blue); }
+.logo-mark span:nth-child(2) { background: rgba(255,255,255,.18); }
+.logo-mark span:nth-child(3) { background: rgba(255,255,255,.18); }
+.logo-mark span:nth-child(4) { background: rgba(255,255,255,.65); }
+.logo-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px; font-weight: 800; letter-spacing: -.03em; color: var(--white);
+}
+.logo-text em { color: var(--blue); font-style: normal; }
+.nav-btn {
+  background: var(--white); color: var(--black);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  padding: 10px 22px; border-radius: 8px; border: none;
+  transition: opacity .2s, transform .15s;
+}
+.nav-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding-top: clamp(100px,15vh,140px);
+  padding-bottom: clamp(60px,8vh,100px);
+  padding-left: var(--px); padding-right: var(--px);
+  position: relative; overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size: clamp(40px,6vw,72px) clamp(40px,6vw,72px);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%,black 30%,transparent 100%);
+}
+.hero-glow {
+  position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+  width: clamp(300px,70vw,800px); height: clamp(300px,70vw,800px);
+  background: radial-gradient(circle,rgba(37,99,235,.15) 0%,transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--s2); border: .5px solid var(--bd2); border-radius: 100px;
+  padding: 6px 16px 6px 10px; font-size: 13px; color: var(--gray-lt);
+  margin-bottom: clamp(1.5rem,3vw,2.25rem);
+  opacity: 0; transform: translateY(14px);
+  animation: up .6s .1s forwards;
+}
+.htag-dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.hero h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(42px,9vw,100px);
+  font-weight: 800; letter-spacing: -.04em; line-height: .98;
+  color: var(--white); max-width: clamp(320px,90vw,1000px);
+  opacity: 0; transform: translateY(24px);
+  animation: up .8s .2s forwards;
+}
+.hero h1 .soft   { font-weight: 400; color: var(--gray-lt); }
+.hero h1 .accent { color: var(--blue); }
+
+.hero-sub {
+  font-size: clamp(15px,1.9vw,18px); color: var(--gray-lt);
+  max-width: clamp(280px,55vw,520px); margin-top: clamp(1.25rem,2.5vw,2rem);
+  line-height: 1.8; margin-left: auto; margin-right: auto;
+  opacity: 0; transform: translateY(20px);
+  animation: up .7s .38s forwards;
+}
+.hero-ctas {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+  margin-top: clamp(1.75rem,3.5vw,2.75rem);
+  opacity: 0; transform: translateY(20px);
+  animation: up .7s .52s forwards;
+}
+.hero-stats {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px,5vw,52px);
+  margin-top: clamp(3rem,6vw,5rem); padding-top: clamp(1.5rem,3vw,2.5rem);
+  border-top: .5px solid var(--bd); width: 100%; max-width: 800px;
+  opacity: 0; transform: translateY(20px);
+  animation: up .7s .68s forwards;
+}
+.stat-n {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(22px,3vw,32px); font-weight: 800;
+  letter-spacing: -.04em; color: var(--white); line-height: 1;
+}
+.stat-l { font-size: 13px; color: var(--gray); margin-top: 4px; }
+
+@keyframes up { to { opacity:1; transform:none; } }
+
+/* ── MARQUEE ── */
+.mq-wrap {
+  border-top: .5px solid var(--bd); border-bottom: .5px solid var(--bd);
+  padding: 14px 0; overflow: hidden; background: var(--s1);
+}
+.mq-track { display: flex; gap: 52px; width: max-content; animation: mq 22s linear infinite; }
+.mq-item {
+  font-size: 12px; font-weight: 500; letter-spacing: .12em;
+  color: var(--gray); text-transform: uppercase; white-space: nowrap;
+  display: flex; align-items: center; gap: 52px;
+}
+.mq-item::after { content:''; width:3px; height:3px; background:var(--blue); border-radius:50%; display:inline-block; }
+@keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SECTIONS ── */
+.sec { padding: var(--py) var(--px); }
+.sec.alt { background: var(--s1); }
+
+/* ── SERVICIOS ── */
+.services-hd { margin-bottom: clamp(2rem,4vw,3rem); text-align: center; }
+.services-hd .lead { margin: .75rem auto 0; }
+.sg {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--bd);
+  border: .5px solid var(--bd); border-radius: 18px; overflow: hidden;
+}
+.sc2 { background: var(--s1); padding: clamp(24px,4vw,36px) clamp(20px,3vw,30px); transition: background .2s; }
+.sc2:hover { background: var(--s2); }
+.si-icon {
+  width: 40px; height: 40px; background: var(--blue-a);
+  border: .5px solid rgba(37,99,235,.22); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
+}
+.si-icon svg { width:18px; height:18px; stroke:var(--blue); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.si-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(15px,1.8vw,17px); font-weight: 700;
+  letter-spacing: -.02em; color: var(--white); margin-bottom: .65rem; line-height: 1.25;
+}
+.si-desc { font-size: 14px; color: var(--gray-lt); line-height: 1.75; }
+
+/* ── PROCESO ── */
+.ps {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: var(--bd);
+  border: .5px solid var(--bd); border-radius: 18px; overflow: hidden;
+}
+.ps-step { background: var(--black); padding: clamp(22px,3.5vw,32px) clamp(18px,2.5vw,26px); }
+.ps-n {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(36px,5vw,48px); font-weight: 800; letter-spacing: -.05em;
+  color: var(--white); opacity: .08; line-height: 1; margin-bottom: .9rem;
+}
+.ps-t {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700;
+  letter-spacing: -.02em; color: var(--white); margin-bottom: .45rem;
+}
+.ps-d { font-size: 13px; color: var(--gray-lt); line-height: 1.75; }
+
+/* ── WHY ── */
+.why-g { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,5vw,60px); align-items: start; }
+.why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+.wi {
+  display: flex; align-items: flex-start; gap: 13px;
+  padding: clamp(14px,2vw,18px); background: var(--s1); border: .5px solid var(--bd);
+  border-radius: 12px; transition: border-color .2s;
+}
+.wi:hover { border-color: rgba(37,99,235,.28); }
+.wi-check {
+  width: 22px; height: 22px; background: var(--blue-a);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.wi-check svg { width:11px; height:11px; stroke:var(--blue); fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+.wi-t { font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:700; letter-spacing:-.01em; color:var(--white); margin-bottom:4px; }
+.wi-d { font-size:14px; color:var(--gray-lt); line-height:1.7; }
+.why-vis {
+  background: var(--s1); border: .5px solid var(--bd); border-radius: 18px;
+  padding: clamp(20px,3vw,32px); display: flex; flex-direction: column; gap: 13px;
+}
+.mock-win { background: var(--black); border-radius: 10px; border: .5px solid var(--bd2); overflow: hidden; }
+.mock-bar2 { display:flex; align-items:center; gap:6px; padding:9px 13px; border-bottom:.5px solid var(--bd); }
+.md { width:8px; height:8px; border-radius:50%; }
+.mock-body { padding:15px; }
+.mock-blu { background:var(--blue); height:58px; border-radius:6px; margin-bottom:10px; }
+.ml { display:flex; flex-direction:column; gap:7px; }
+.mb { height:7px; background:var(--s2); border-radius:3px; }
+.mb.b { background:var(--blue); width:72%; }
+.mb.s { width:52%; }
+.mb.x { width:34%; }
+.stats-row { display:flex; gap:10px; }
+.stat-box { flex:1; background:var(--black); border:.5px solid var(--bd); border-radius:10px; padding:clamp(12px,2vw,16px); }
+.stat-box .n { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(18px,2.5vw,22px); font-weight:800; letter-spacing:-.04em; color:var(--white); margin-bottom:3px; }
+.stat-box .n.bl { color:var(--blue); }
+.stat-box .l { font-size:12px; color:var(--gray-lt); }
+
+/* ── CONTACT ── */
+.contact-wrap { max-width: 560px; margin: 0 auto; text-align: center; }
+.contact-form-wrap { text-align: left; margin-top: 2.5rem; }
+
+/* ── FOOTER ── */
+footer {
+  padding: clamp(24px,3vw,36px) var(--px);
+  border-top: .5px solid var(--bd);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.fc { font-size: 13px; color: var(--gray); }
+.fl { display: flex; gap: 24px; }
+.fl a { font-size: 13px; color: var(--gray); text-decoration: none; transition: color .2s; }
+.fl a:hover { color: var(--white); }
+
+/* ── RESPONSIVE: TABLET (481–900px) ── */
+@media(min-width:481px) and (max-width:900px) {
+  .hero h1 { font-size: clamp(44px,8.5vw,72px); }
+  .sg { grid-template-columns: repeat(2,1fr); }
+  .ps { grid-template-columns: repeat(2,1fr); }
+  .why-g { grid-template-columns: 1fr; }
+  .why-vis { display: none; }
+}
+
+/* ── RESPONSIVE: MÓVIL (≤480px) ── */
+@media(max-width:480px) {
+  .hero-ctas > * { width: 100%; }
+  .hero-ctas { flex-direction: column; }
+  .sg { grid-template-columns: 1fr; }
+  .ps { grid-template-columns: 1fr; }
+  .why-g { grid-template-columns: 1fr; }
+  .why-vis { display: none; }
+  .dg { grid-template-columns: 1fr; }
+  .fr { grid-template-columns: 1fr; }
+  footer { flex-direction: column; align-items: center; text-align: center; }
+  .fl { justify-content: center; }
+  .modal { border-radius: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── OVERLAY: DISEÑOS ── -->
+<div class="overlay" id="ov-designs">
+  <div class="modal">
+    <button class="m-close" onclick="co('ov-designs')">✕</button>
+    <span class="label">Ejemplos de diseño</span>
+    <h2 class="m-title">Webs que hemos creado</h2>
+    <p class="m-body">Cada proyecto es único. Estos son algunos estilos que desarrollamos para negocios locales y startups. Cuéntanos el tuyo y lo construimos desde cero.</p>
+    <div class="dg">
+      <div class="dc">
+        <div class="dp dk">
+          <div class="dn-nav"><div class="dn-logo" style="background:#2563EB"></div><div class="dn-btn" style="background:#2563EB"></div></div>
+          <div class="dn-hero" style="background:#111;border:.5px solid #222"><div style="width:65%"><div class="dn-h" style="background:#fff;width:80%"></div><div class="dn-p" style="background:#444;width:55%"></div></div></div>
+          <div class="dn-p" style="background:#1a1a1a;width:90%;margin-top:5px"></div>
+          <div class="dn-p" style="background:#1a1a1a;width:65%;margin-top:5px"></div>
+        </div>
+        <div class="dc-info"><div class="dc-name">Tech oscuro</div><div class="dc-type">Startup · SaaS</div></div>
+      </div>
+      <div class="dc">
+        <div class="dp lt">
+          <div class="dn-nav"><div class="dn-logo" style="background:#111"></div><div class="dn-btn" style="background:#111;border-radius:20px"></div></div>
+          <div style="margin-top:10px"><div class="dn-h" style="background:#222;width:78%;height:11px;margin-bottom:7px"></div><div class="dn-p" style="background:#aaa;width:55%"></div></div>
+          <div style="display:flex;gap:6px;margin-top:12px"><div style="flex:1;height:24px;background:#E8E5E0;border-radius:4px"></div><div style="flex:1;height:24px;background:#E8E5E0;border-radius:4px"></div></div>
+        </div>
+        <div class="dc-info"><div class="dc-name">Minimalista claro</div><div class="dc-type">Estudio · Freelance</div></div>
+      </div>
+      <div class="dc">
+        <div class="dp bb">
+          <div class="dn-nav"><div class="dn-logo" style="background:#3B82F6"></div><div class="dn-btn" style="background:#3B82F6"></div></div>
+          <div style="margin-top:10px"><div class="dn-h" style="background:#fff;width:85%;margin-bottom:8px"></div><div class="dn-h" style="background:rgba(255,255,255,.35);width:58%"></div></div>
+          <div style="display:flex;gap:7px;margin-top:12px"><div style="width:72px;height:19px;background:#2563EB;border-radius:4px"></div><div style="width:56px;height:19px;background:rgba(255,255,255,.08);border-radius:4px;border:.5px solid rgba(255,255,255,.18)"></div></div>
+        </div>
+        <div class="dc-info"><div class="dc-name">Blue corporate</div><div class="dc-type">Empresa · Clínica</div></div>
+      </div>
+      <div class="dc">
+        <div class="dp cr">
+          <div class="dn-nav"><div class="dn-logo" style="background:#8B4513"></div><div class="dn-btn" style="background:#8B4513;border-radius:20px"></div></div>
+          <div style="margin-top:10px"><div class="dn-h" style="background:#3D1F0A;width:88%;height:12px;margin-bottom:7px"></div><div class="dn-p" style="background:#C4A882;width:62%"></div></div>
+          <div style="display:flex;gap:6px;margin-top:10px"><div style="flex:1;height:26px;background:#E8D5BC;border-radius:5px"></div><div style="flex:1;height:26px;background:#E8D5BC;border-radius:5px"></div><div style="flex:1;height:26px;background:#E8D5BC;border-radius:5px"></div></div>
+        </div>
+        <div class="dc-info"><div class="dc-name">Cálido artesanal</div><div class="dc-type">Restaurante · Tienda</div></div>
+      </div>
+    </div>
+    <button class="btn-p" style="width:100%" onclick="co('ov-designs');oo('ov-contact')">Quiero mi web →</button>
+  </div>
+</div>
+
+<!-- ── OVERLAY: PROCESO ── -->
+<div class="overlay" id="ov-proceso">
+  <div class="modal">
+    <button class="m-close" onclick="co('ov-proceso')">✕</button>
+    <span class="label">Cómo trabajamos</span>
+    <h2 class="m-title">Simple, sin sorpresas</h2>
+    <p class="m-body">De la primera llamada a la web publicada. Un proceso claro para que sepas exactamente qué va a pasar y cuándo.</p>
+    <div class="steps">
+      <div class="si"><div class="sn">01</div><div><div class="st">Hablamos — 20 minutos</div><div class="sd">Nos cuentas tu negocio y lo que necesitas. Sin formularios ni presentaciones, una llamada o un WhatsApp.</div></div></div>
+      <div class="si"><div class="sn">02</div><div><div class="st">Diseño a medida — 2-3 días</div><div class="sd">Creamos el diseño completo. Lo ves antes de programar nada y ajustamos todo lo que quieras.</div></div></div>
+      <div class="si"><div class="sn">03</div><div><div class="st">Desarrollo — 3-4 días</div><div class="sd">Programamos con tecnología moderna. Rápida, segura, adaptada al móvil y preparada para crecer.</div></div></div>
+      <div class="si"><div class="sn">04</div><div><div class="st">Publicamos y te damos el control</div><div class="sd">Subimos la web, configuramos el SEO inicial y te entregamos acceso total. Tú mandas en tu web.</div></div></div>
+    </div>
+    <div style="margin-top:2rem">
+      <button class="btn-p" style="width:100%" onclick="co('ov-proceso');oo('ov-contact')">Empezamos →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── OVERLAY: CONTACTO ── -->
+<div class="overlay" id="ov-contact">
+  <div class="modal">
+    <button class="m-close" onclick="co('ov-contact')">✕</button>
+    <span class="label">Hablemos</span>
+    <h2 class="m-title">¿Tienes un proyecto?</h2>
+    <p class="m-body">Cuéntanos qué necesitas y te respondemos en menos de 24 horas. Sin compromiso.</p>
+    <form class="form" id="mform" action="https://formspree.io/f/mgodknal" method="POST" onsubmit="submitForm(event,'mform','mok')">
+      <div class="fr">
+        <input class="fi" type="text" name="nombre" placeholder="Tu nombre" required>
+        <input class="fi" type="text" name="negocio" placeholder="Tu empresa o negocio">
+      </div>
+      <input class="fi" type="email" name="email" placeholder="Tu email" required>
+      <select class="fi" name="tipo_web" onchange="this.style.color='var(--white)'">
+        <option value="" disabled selected style="color:var(--gray)">¿Qué tipo de web necesitas?</option>
+        <option value="Web corporativa">Web corporativa</option>
+        <option value="Tienda online">Tienda online</option>
+        <option value="Landing page">Landing page</option>
+        <option value="Startup / SaaS">Startup / SaaS</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <textarea class="fi fta" name="mensaje" placeholder="Cuéntanos más sobre tu proyecto..."></textarea>
+      <button type="submit" class="fsub">Enviar mensaje →</button>
+    </form>
+    <div id="mok" style="display:none;text-align:center;padding:2.5rem 0">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;letter-spacing:-.03em;color:var(--white);margin-bottom:.5rem">Recibido.</div>
+      <div style="font-size:15px;color:var(--gray-lt)">Te respondemos en menos de 24 horas.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-mark"><span></span><span></span><span></span><span></span></div>
+    <span class="logo-text">web<em>ify</em>.es</span>
+  </a>
+  <button class="nav-btn" onclick="goContact()">Hablemos</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-tag"><span class="htag-dot"></span>Diseño web profesional · España</div>
+  <h1>Tu web.<br><span class="soft">Tu</span> <span class="accent">negocio.</span></h1>
+  <p class="hero-sub">Webs rápidas, modernas y optimizadas para Google. Para negocios que quieren crecer de verdad.</p>
+  <div class="hero-ctas">
+    <button class="btn-p" onclick="abrirCalendario()">Reserva tu cita gratis</button>
+    <button class="btn-o" onclick="oo('ov-proceso')">Cómo trabajamos <span class="arr">→</span></button>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-n">7 días</div><div class="stat-l">de entrega media</div></div>
+    <div><div class="stat-n">100%</div><div class="stat-l">a medida</div></div>
+    <div><div class="stat-n">SEO</div><div class="stat-l">incluido siempre</div></div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="mq-wrap" aria-hidden="true">
+  <div class="mq-track">
+    <span class="mq-item">Diseño web</span><span class="mq-item">Negocios locales</span><span class="mq-item">Startups</span><span class="mq-item">SEO en Google</span><span class="mq-item">Webs rápidas</span><span class="mq-item">A tu medida</span><span class="mq-item">España</span>
+    <span class="mq-item">Diseño web</span><span class="mq-item">Negocios locales</span><span class="mq-item">Startups</span><span class="mq-item">SEO en Google</span><span class="mq-item">Webs rápidas</span><span class="mq-item">A tu medida</span><span class="mq-item">España</span>
+  </div>
+</div>
+
+<!-- ── SERVICIOS ── -->
+<section class="sec" id="servicios">
+  <div class="services-hd">
+    <span class="label">Servicios</span>
+    <h2 class="h2" style="margin-bottom:.75rem">Todo lo que necesita tu negocio <span class="soft">online</span></h2>
+    <p class="lead">Sin plantillas. Cada web está pensada para el negocio concreto del cliente.</p>
+  </div>
+  <div class="sg">
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+      <div class="si-title">Web corporativa</div>
+      <div class="si-desc">Presencia profesional para tu negocio. Diseño único, rápido y preparado para Google.</div>
+    </div>
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M3 12h18"/></svg></div>
+      <div class="si-title">Posicionamiento SEO</div>
+      <div class="si-desc">Aparece cuando tu cliente te busca. SEO técnico integrado desde el día uno.</div>
+    </div>
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+      <div class="si-title">Tienda online</div>
+      <div class="si-desc">E-commerce completo con pasarela de pago, stock y diseño que convierte.</div>
+    </div>
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="si-title">Landing pages</div>
+      <div class="si-desc">Páginas de conversión para captar leads y cerrar ventas. Directo al grano.</div>
+    </div>
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
+      <div class="si-title">Diseño responsive</div>
+      <div class="si-desc">Perfecta en móvil, tablet y ordenador. El 70% del tráfico llega desde el móvil.</div>
+    </div>
+    <div class="sc2">
+      <div class="si-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
+      <div class="si-title">Mantenimiento</div>
+      <div class="si-desc">Tu web siempre actualizada, segura y funcionando. Nos ocupamos de todo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESO ── -->
+<section class="sec alt">
+  <div style="text-align:center;margin-bottom:clamp(2rem,4vw,3rem)">
+    <span class="label">Cómo trabajamos</span>
+    <h2 class="h2" style="margin-bottom:.75rem">Simple. <span class="soft">Sin sorpresas.</span></h2>
+    <p class="lead" style="margin:0 auto">De la primera llamada a la web publicada en menos de 7 días.</p>
+  </div>
+  <div class="ps">
+    <div class="ps-step"><div class="ps-n">01</div><div class="ps-t">Hablamos</div><div class="ps-d">20 minutos para entender tu negocio y lo que necesitas.</div></div>
+    <div class="ps-step"><div class="ps-n">02</div><div class="ps-t">Diseñamos</div><div class="ps-d">Lo ves antes de programar. Ajustamos lo que haga falta.</div></div>
+    <div class="ps-step"><div class="ps-n">03</div><div class="ps-t">Desarrollamos</div><div class="ps-d">Tecnología moderna. Rápida, segura y preparada para crecer.</div></div>
+    <div class="ps-step"><div class="ps-n">04</div><div class="ps-t">Publicamos</div><div class="ps-d">Tu web en vivo con SEO configurado. Tú tienes el control.</div></div>
+  </div>
+  <div style="margin-top:2.5rem;text-align:center">
+    <button class="btn-o" onclick="oo('ov-proceso')" style="margin:0 auto">Ver el proceso completo <span class="arr">→</span></button>
+  </div>
+</section>
+
+<!-- ── POR QUÉ ── -->
+<section class="sec">
+  <div class="why-g">
+    <div>
+      <span class="label">Por qué elegirnos</span>
+      <h2 class="h2">Sin agencias. <span class="soft">Sin burocracia.</span></h2>
+      <p class="lead" style="margin-top:.75rem">Trato directo, resultado profesional.</p>
+      <ul class="why-list">
+        <li class="wi"><div class="wi-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="wi-t">Hablas con quien hace tu web</div><div class="wi-d">Sin intermediarios. Contacto directo con el diseñador de principio a fin.</div></div></li>
+        <li class="wi"><div class="wi-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="wi-t">Entrega en 7 días</div><div class="wi-d">Sin meses de espera. Proceso ágil y comprometido con tu tiempo.</div></div></li>
+        <li class="wi"><div class="wi-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="wi-t">SEO desde el primer día</div><div class="wi-d">No es un extra. Tu web llega a Google bien estructurada desde el principio.</div></div></li>
+        <li class="wi"><div class="wi-check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5"/></svg></div><div><div class="wi-t">Sin letra pequeña</div><div class="wi-d">Acordamos el proyecto antes de empezar. Sin sorpresas ni costes ocultos.</div></div></li>
+      </ul>
+    </div>
+    <div class="why-vis">
+      <div class="mock-win">
+        <div class="mock-bar2"><div class="md" style="background:#ff5f57"></div><div class="md" style="background:#febc2e"></div><div class="md" style="background:#28c840"></div></div>
+        <div class="mock-body"><div class="mock-blu"></div><div class="ml"><div class="mb b"></div><div class="mb s"></div><div class="mb x"></div></div></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="n">↑ 340%</div><div class="l">Más visitas orgánicas</div></div>
+        <div class="stat-box"><div class="n bl">#1</div><div class="l">En Google local</div></div>
+      </div>
+      <button class="btn-p" style="width:100%" onclick="goContact()">Quiero mi web →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACTO ── -->
+<section class="sec alt" id="contacto">
+  <div class="contact-wrap">
+    <span class="label" style="text-align:center;display:block">Contacto</span>
+    <h2 class="h2" style="text-align:center;max-width:360px;margin:0 auto .75rem">¿Empezamos tu proyecto?</h2>
+    <p class="lead" style="margin:0 auto;text-align:center">Te respondemos en menos de 24 horas.</p>
+    <div class="contact-form-wrap">
+      <form class="form" id="pform" action="https://formspree.io/f/mgodknal" method="POST" onsubmit="submitForm(event,'pform','pok2')">
+        <div class="fr">
+          <input class="fi" type="text" name="nombre" placeholder="Tu nombre" required>
+          <input class="fi" type="text" name="negocio" placeholder="Tu empresa o negocio">
+        </div>
+        <input class="fi" type="email" name="email" placeholder="Tu email" required>
+        <select class="fi" name="tipo_web" onchange="this.style.color='var(--white)'">
+          <option value="" disabled selected style="color:var(--gray)">¿Qué tipo de web necesitas?</option>
+          <option value="Web corporativa">Web corporativa</option>
+          <option value="Tienda online">Tienda online</option>
+          <option value="Landing page">Landing page</option>
+          <option value="Startup / SaaS">Startup / SaaS</option>
+          <option value="Otro">Otro</option>
+        </select>
+        <textarea class="fi fta" name="mensaje" placeholder="Cuéntanos más sobre tu proyecto..."></textarea>
+        <button type="submit" class="fsub">Enviar mensaje →</button>
+      </form>
+      <div id="pok2" style="display:none;text-align:center;padding:2.5rem 0">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;letter-spacing:-.03em;color:var(--white);margin-bottom:.5rem">Recibido.</div>
+        <div style="font-size:15px;color:var(--gray-lt)">Te respondemos en menos de 24 horas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="fc">© 2026 Webify.es — Diseño web profesional en España</span>
+  <div class="fl">
+    <a href="#servicios">Servicios</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</footer>
+
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script>
+  // ── Calendly
+  function abrirCalendario() {
+    Calendly.initPopupWidget({ url: 'https://calendly.com/pepevilabosca/30min' });
+    return false;
+  }
+
+  // ── Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 30), { passive: true });
+
+  // ── Overlays
+  function oo(id) { document.getElementById(id).classList.add('on'); document.body.style.overflow = 'hidden'; }
+  function co(id) { document.getElementById(id).classList.remove('on'); document.body.style.overflow = ''; }
+
+  // Click fuera del modal → cerrar
+  document.querySelectorAll('.overlay').forEach(el =>
+    el.addEventListener('click', e => { if (e.target === el) co(el.id); })
+  );
+  // ESC → cerrar
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.overlay.on').forEach(el => co(el.id));
+  });
+
+  // ── "Hablemos" nav → scroll a contacto
+  function goContact() {
+    document.querySelectorAll('.overlay.on').forEach(el => co(el.id));
+    document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── Submit con fetch (Formspree async)
+  async function submitForm(e, formId, okId) {
+    e.preventDefault();
+    const form = document.getElementById(formId);
+    const btn  = form.querySelector('button[type="submit"]');
+    const data = new FormData(form);
+
+    btn.disabled  = true;
+    btn.innerText = 'Enviando...';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById(okId).style.display = 'block';
+      } else {
+        const json = await res.json().catch(() => ({}));
+        const msg  = json?.errors?.map(e => e.message).join(', ') || 'Error desconocido.';
+        alert('No se pudo enviar: ' + msg);
+        btn.disabled  = false;
+        btn.innerText = 'Enviar mensaje →';
+      }
+    } catch {
+      alert('Error de conexión. Revisa tu internet e inténtalo de nuevo.');
+      btn.disabled  = false;
+      btn.innerText = 'Enviar mensaje →';
+    }
+  }
+</script>
+</body>
+</html>
