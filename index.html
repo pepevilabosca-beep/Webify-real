@@ -3,7 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Webify.es — Tu web. Tu negocio.</title>
+
+<!-- ── SEO BÁSICO ── -->
+<title>Webifywebs | Diseño Web Profesional y SEO en España</title>
+<meta name="description" content="Diseño web a medida para negocios y startups. En Webifywebs creamos webs rápidas, modernas y optimizadas para Google en 7 días. Consigue más clientes hoy.">
+<meta name="keywords" content="webify, webifywebs, diseño web españa, creador de paginas web, diseño web startups, seo local, desarrollo web">
+<meta name="author" content="Webifywebs">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.webifywebs.com/">
+
+<!-- ── OPEN GRAPH (Redes Sociales y WhatsApp) ── -->
+<meta property="og:title" content="Webifywebs | Tu web. Tu negocio.">
+<meta property="og:description" content="Webs rápidas, modernas y optimizadas para Google. Para negocios que quieren crecer de verdad.">
+<meta property="og:image" content="https://www.webifywebs.com/imagen-destacada.jpg"> <!-- Sube una imagen guapa a tu carpeta -->
+<meta property="og:url" content="https://www.webifywebs.com/">
+<meta property="og:type" content="website">
+
+<!-- ── SCHEMA MARKUP (Datos Estructurados para Google) ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Webifywebs",
+  "url": "https://www.webifywebs.com",
+  "logo": "https://www.webifywebs.com/logo.png",
+  "description": "Estudio de diseño web profesional en España. Especialistas en webs corporativas, tiendas online y posicionamiento SEO.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "ES"
+  },
+  "priceRange": "$$"
+}
+</script>
+
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -82,6 +114,12 @@ body {
 .arr { transition: transform .2s; display: inline-block; }
 .btn-o:hover .arr { transform: translateX(3px); }
 
+/* CLASE PARA OCULTAR EL H1 (SEO) */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; 
+  overflow: hidden; clip: rect(0,0,0,0); border: 0;
+}
+
 /* ── OVERLAY / MODAL ── */
 .overlay {
   display: none; position: fixed; inset: 0;
@@ -151,7 +189,7 @@ body {
 
 /* ── FORM ── */
 .form { display:flex; flex-direction:column; gap:10px; }
-.fr   { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.fr    { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .fi {
   background: var(--s2); border: .5px solid var(--bd2); border-radius: 10px;
   padding: 13px 15px; color: var(--white); outline: none; width: 100%;
@@ -159,7 +197,6 @@ body {
 }
 .fi::placeholder { color: var(--gray); }
 .fi:focus { border-color: rgba(37,99,235,.5); }
-/* FIX: select color cuando está seleccionado */
 .fi.selected, select.fi:not([value=""]) { color: var(--white); }
 .fta { resize: vertical; min-height: 96px; }
 .fsub {
@@ -239,7 +276,8 @@ nav.sc { border-color: var(--bd); background: rgba(10,10,10,.93); backdrop-filte
 .htag-dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-.hero h1 {
+/* CAMBIO SEO: Ahora atacamos la clase .hero-title en vez de la etiqueta h1 */
+.hero .hero-title {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(42px,9vw,100px);
   font-weight: 800; letter-spacing: -.04em; line-height: .98;
@@ -247,8 +285,8 @@ nav.sc { border-color: var(--bd); background: rgba(10,10,10,.93); backdrop-filte
   opacity: 0; transform: translateY(24px);
   animation: up .8s .2s forwards;
 }
-.hero h1 .soft   { font-weight: 400; color: var(--gray-lt); }
-.hero h1 .accent { color: var(--blue); }
+.hero .hero-title .soft   { font-weight: 400; color: var(--gray-lt); }
+.hero .hero-title .accent { color: var(--blue); }
 
 .hero-sub {
   font-size: clamp(15px,1.9vw,18px); color: var(--gray-lt);
@@ -393,16 +431,15 @@ footer {
 .fl a { font-size: 13px; color: var(--gray); text-decoration: none; transition: color .2s; }
 .fl a:hover { color: var(--white); }
 
-/* ── RESPONSIVE: TABLET (481–900px) ── */
+/* ── RESPONSIVE ── */
 @media(min-width:481px) and (max-width:900px) {
-  .hero h1 { font-size: clamp(44px,8.5vw,72px); }
+  .hero .hero-title { font-size: clamp(44px,8.5vw,72px); }
   .sg { grid-template-columns: repeat(2,1fr); }
   .ps { grid-template-columns: repeat(2,1fr); }
   .why-g { grid-template-columns: 1fr; }
   .why-vis { display: none; }
 }
 
-/* ── RESPONSIVE: MÓVIL (≤480px) ── */
 @media(max-width:480px) {
   .hero-ctas > * { width: 100%; }
   .hero-ctas { flex-direction: column; }
@@ -420,7 +457,7 @@ footer {
 </head>
 <body>
 
-<!-- ── OVERLAY: DISEÑOS ── -->
+<!-- ... (Los modales se mantienen intactos) ... -->
 <div class="overlay" id="ov-designs">
   <div class="modal">
     <button class="m-close" onclick="co('ov-designs')">✕</button>
@@ -466,7 +503,6 @@ footer {
   </div>
 </div>
 
-<!-- ── OVERLAY: PROCESO ── -->
 <div class="overlay" id="ov-proceso">
   <div class="modal">
     <button class="m-close" onclick="co('ov-proceso')">✕</button>
@@ -485,7 +521,6 @@ footer {
   </div>
 </div>
 
-<!-- ── OVERLAY: CONTACTO ── -->
 <div class="overlay" id="ov-contact">
   <div class="modal">
     <button class="m-close" onclick="co('ov-contact')">✕</button>
@@ -516,21 +551,25 @@ footer {
   </div>
 </div>
 
-<!-- ── NAV ── -->
 <nav id="nav">
   <a href="#" class="logo">
     <div class="logo-mark"><span></span><span></span><span></span><span></span></div>
-    <span class="logo-text">web<em>ify</em>.es</span>
+    <span class="logo-text">Web<em>ifywebs</em>.com</span>
   </a>
   <button class="nav-btn" onclick="goContact()">Hablemos</button>
 </nav>
 
-<!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-grid" aria-hidden="true"></div>
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-tag"><span class="htag-dot"></span>Diseño web profesional · España</div>
-  <h1>Tu web.<br><span class="soft">Tu</span> <span class="accent">negocio.</span></h1>
+  
+  <!-- CAMBIO CLAVE SEO: Este es el H1 que lee Google, pero el usuario no lo ve -->
+  <h1 class="sr-only">Agencia de Diseño Web y SEO en España - Webifywebs</h1>
+  
+  <!-- Y este es el "H1" visual, idéntico al tuyo de antes -->
+  <div class="hero-title">Tu web.<br><span class="soft">Tu</span> <span class="accent">negocio.</span></div>
+  
   <p class="hero-sub">Webs rápidas, modernas y optimizadas para Google. Para negocios que quieren crecer de verdad.</p>
   <div class="hero-ctas">
     <button class="btn-p" onclick="abrirCalendario()">Reserva tu cita gratis</button>
@@ -543,7 +582,6 @@ footer {
   </div>
 </section>
 
-<!-- ── MARQUEE ── -->
 <div class="mq-wrap" aria-hidden="true">
   <div class="mq-track">
     <span class="mq-item">Diseño web</span><span class="mq-item">Negocios locales</span><span class="mq-item">Startups</span><span class="mq-item">SEO en Google</span><span class="mq-item">Webs rápidas</span><span class="mq-item">A tu medida</span><span class="mq-item">España</span>
@@ -551,7 +589,6 @@ footer {
   </div>
 </div>
 
-<!-- ── SERVICIOS ── -->
 <section class="sec" id="servicios">
   <div class="services-hd">
     <span class="label">Servicios</span>
@@ -592,7 +629,6 @@ footer {
   </div>
 </section>
 
-<!-- ── PROCESO ── -->
 <section class="sec alt">
   <div style="text-align:center;margin-bottom:clamp(2rem,4vw,3rem)">
     <span class="label">Cómo trabajamos</span>
@@ -610,7 +646,6 @@ footer {
   </div>
 </section>
 
-<!-- ── POR QUÉ ── -->
 <section class="sec">
   <div class="why-g">
     <div>
@@ -638,7 +673,6 @@ footer {
   </div>
 </section>
 
-<!-- ── CONTACTO ── -->
 <section class="sec alt" id="contacto">
   <div class="contact-wrap">
     <span class="label" style="text-align:center;display:block">Contacto</span>
@@ -670,9 +704,8 @@ footer {
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
-  <span class="fc">© 2026 Webify.es — Diseño web profesional en España</span>
+  <span class="fc">© 2026 Webifywebs.com — Diseño web profesional en España</span>
   <div class="fl">
     <a href="#servicios">Servicios</a>
     <a href="#contacto">Contacto</a>
@@ -681,36 +714,29 @@ footer {
 
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 <script>
-  // ── Calendly
   function abrirCalendario() {
-    Calendly.initPopupWidget({ url: 'https://calendly.com/pepevilabosca/30min' });
+    Calendly.initPopupWidget({ url: 'https://calendly.com/pepevilabosca/30min?locale=es' });
     return false;
   }
 
-  // ── Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 30), { passive: true });
 
-  // ── Overlays
   function oo(id) { document.getElementById(id).classList.add('on'); document.body.style.overflow = 'hidden'; }
   function co(id) { document.getElementById(id).classList.remove('on'); document.body.style.overflow = ''; }
 
-  // Click fuera del modal → cerrar
   document.querySelectorAll('.overlay').forEach(el =>
     el.addEventListener('click', e => { if (e.target === el) co(el.id); })
   );
-  // ESC → cerrar
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.overlay.on').forEach(el => co(el.id));
   });
 
-  // ── "Hablemos" nav → scroll a contacto
   function goContact() {
     document.querySelectorAll('.overlay.on').forEach(el => co(el.id));
     document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
   }
 
-  // ── Submit con fetch (Formspree async)
   async function submitForm(e, formId, okId) {
     e.preventDefault();
     const form = document.getElementById(formId);
